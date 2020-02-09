@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import uuid from 'uuid/v4';
 
 const Formulario = () => {
 
@@ -16,21 +17,43 @@ const Formulario = () => {
 
     // funcion que se ejecuta cada vez que en usuario escribe en un input
     const actualizarState = (e) => {
-        console.log("Nombre: " + e.target.name + " Valor: " + e.target.value);
+        //console.log("Nombre: " + e.target.name + " Valor: " + e.target.value);
         actualizarCita({
             ...cita,
             [e.target.name]: e.target.value
         })
     }
+    const [ error, actualizarError ] = useState(false)
+
     
     const submitCita = (e) => {
         e.preventDefault(); // para que no envie los datos por el metodo GET con el querystring
-        alert('enviando...')
+        //alert('se esta enviando el formulario...')
+
+        if (mascota.trim() === '' || propietario.trim() === '' || fecha.trim() === '' || 
+        hora.trim() === '' || sintomas.trim() === ''){
+        console.log("hay un error en el input...")
+        actualizarError(true)
+        return
+    }
+
+        // Eliminar el mensaje previo
+        actualizarError(false)
+
+        //Asignar un id
+        cita.id=uuid();
+        //console.log(cita.id);
+
+
     }
 
     return (       
 
         <Fragment>
+
+            { error ? <p className="alerta-error">Todos los campos son obligatorios</p>
+                    : null
+            }
 
             <h2>Crear Cita</h2>
 
