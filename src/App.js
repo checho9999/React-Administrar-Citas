@@ -1,13 +1,36 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import Formulario from './components/Formulario'
 import Cita from './components/Cita';
 
 function App() {
 
-  const [ citas, guardarCitas ] = useState([]);
+    let citasIniciales = JSON.parse(localStorage.getItem('citas'));
+    //console.log(citasIniciales);
+
+    if (!citasIniciales){
+      citasIniciales=[];
+    }
+
+    const [ citas, guardarCitas ] = useState(citasIniciales);
+  
+    //useEffect para realizar ciertas operaciones para cuando cambia el state
+    useEffect( () => {
+  
+      // para que no tire error de dependencia, sino hay que ponerlo en el [] final del useEffect
+      let citasIniciales = JSON.parse(localStorage.getItem('citas'));
+      //console.log(citasIniciales);
+      
+      if (citasIniciales){
+        localStorage.setItem('citas', JSON.stringify(citas));
+      }
+      else{
+        localStorage.setItem('citas', JSON.stringify([]));
+      }
+  
+    }, [citas])
 
   const crearCita = (cita) => {
-    console.log(cita)
+    console.log(cita);
     guardarCitas([
       ...citas,
       cita
@@ -19,11 +42,12 @@ function App() {
     //console.log(id);
     const nuevasCitas = citas.filter(cita => cita.id !== id)
   
-    guardarCitas(nuevasCitas)
+    guardarCitas(nuevasCitas);
   
   }
   
   //mensaje condicional
+  //console.log(citas.length);
   const titulo = citas.length === 0 ? 'No hay Citas' : 'Administra tus Citas';
 
   return (
